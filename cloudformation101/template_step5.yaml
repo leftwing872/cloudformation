@@ -1,0 +1,50 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  InstanceType:
+    Default: t3.micro
+    Description: InstanceType
+    Type: String
+    AllowedValues:
+      - t3.micro
+      - t3.small
+      - t3.medium
+      - t3.large
+      - m5.large
+      - r5.large
+Resources:
+  EC2WEB:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: 
+        Fn::FindInMap:
+        - RegionMap
+        - !Ref AWS::Region
+        - WASAMI
+      InstanceType: t3.small
+      SecurityGroupIds:
+        - !GetAtt EC2WEBInstanceSecurityGroup.GroupId #Fn::GetAtt 내장 함수는 템플릿의 리소스에서 속성 값을 반환합니다.  
+  EC2WEBElasticIP:
+    Type: AWS::EC2::EIP
+  IPAssoc:
+    Type: AWS::EC2::EIPAssociation
+    Properties:
+      InstanceId: !Ref 'EC2WEB'
+      EIP: !Ref 'EC2WEBElasticIP' #파라미터가 LogicalName인 경우, 반환 값은 리소스의 물리적 ID 또는 파라미터의 값입니다.
+    DependsOn: [EC2WEBElasticIP, EC2WEB]
+  EC2WEBInstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow http to client host
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+Mappings:
+  RegionMap:
+    us-east-1:
+      "BASTAMI" : "ami-077a6363df8e6b81a" # Virginia - Updated July 09, 2019
+      "WASAMI" : "ami-077a6363df8e6b81a" # Virginia - Updated July 09, 2019
+    ap-northeast-2:
+      "BASTAMI" : "ami-0029dbeb91e3b0f5f" # Seoul - Updated March 01, 2022
+      "WASAMI" : "ami-0029dbeb91e3b0f5f" # Seoul - Updated March 01, 2022

@@ -1,0 +1,9 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  EC2WEB:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: "ami-0e581dc33f688a5df" #Amazon Linux 2023 ap-northeast-2
+      InstanceType: t3.small
+      # SecurityGroupIds:
+      #   - "sg-05988731860ba3b90"
