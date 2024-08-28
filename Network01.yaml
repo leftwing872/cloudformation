@@ -272,3 +272,15 @@ Outputs:
   VPCId:
     Description: VPCID
     Value: !Sub '${WebServerSecurityGroup.VpcId}'
+  Region:
+    Description: Region
+    Value: !Ref "AWS::Region"
+  StackId:
+    Description: StackId
+    Value: !Ref "AWS::StackId"
+  StackName:
+    Description: StackName
+    Value: !Ref "AWS::StackName"
+  AccountId:
+    Description: AccountId
+    Value: !Ref "AWS::AccountId"
